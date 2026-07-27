@@ -5,36 +5,553 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     /*====================================================
-        STICKY HEADER
+        ELEMENTS
     ====================================================*/
 
     const header = document.getElementById("header");
-
-    if (header) {
-        window.addEventListener("scroll", function () {
-
-            if (window.scrollY > 80) {
-                header.classList.add("sticky");
-            } else {
-                header.classList.remove("sticky");
-            }
-
-        });
-    }
-
+    const menuBtn = document.getElementById("menu-btn");
+    const navbar = document.getElementById("navbar");
+    const overlay = document.querySelector(".menu-overlay");
 
     /*====================================================
         MOBILE MENU
     ====================================================*/
 
-    const menuBtn = document.getElementById("menu-btn");
-    const navbar = document.getElementById("navbar");
-    const overlay = document.querySelector(".menu-overlay");
+    function openMenu() {
+
+        if (!navbar || !menuBtn) return;
+
+        navbar.classList.add("active");
+
+        if (overlay) {
+            overlay.classList.add("active");
+        }
+
+        document.body.classList.add("menu-open");
+
+        menuBtn.setAttribute("aria-expanded", "true");
+        menuBtn.setAttribute("aria-label", "Close navigation menu");
+
+        const icon = menuBtn.querySelector("i");
+
+        if (icon) {
+            icon.classList.remove("fa-bars");
+            icon.classList.add("fa-xmark");
+        }
+    }
+
 
     function closeMenu() {
 
-        if (navbar) {
-            navbar.classList.remove("active");
+        if (!navbar || !menuBtn) return;
+
+        navbar.classList.remove("active");
+
+        if (overlay) {
+            overlay.classList.remove("active");
+        }
+
+        document.body.classList.remove("menu-open");
+
+        menuBtn.setAttribute("aria-expanded", "false");
+        menuBtn.setAttribute("aria-label", "Open navigation menu");
+
+        const icon = menuBtn.querySelector("i");
+
+        if (icon) {
+            icon.classList.remove("fa-xmark");
+            icon.classList.add("fa-bars");
+        }
+    }
+
+
+    function toggleMenu() {
+
+        if (!navbar) return;
+
+        if (navbar.classList.contains("active")) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    }
+
+
+    /*====================================================
+        MENU BUTTON
+    ====================================================*/
+
+    if (menuBtn) {
+
+        menuBtn.addEventListener("click", function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            toggleMenu();
+
+        });
+
+    }
+
+
+    /*====================================================
+        CLOSE MENU WHEN LINK IS CLICKED
+    ====================================================*/
+
+    if (navbar) {
+
+        navbar.querySelectorAll("a").forEach(function (link) {
+
+            link.addEventListener("click", function () {
+
+                closeMenu();
+
+            });
+
+        });
+
+    }
+
+
+    /*====================================================
+        CLOSE MENU WHEN OVERLAY IS CLICKED
+    ====================================================*/
+
+    if (overlay) {
+
+        overlay.addEventListener("click", function () {
+
+            closeMenu();
+
+        });
+
+    }
+
+
+    /*====================================================
+        CLOSE MENU WITH ESCAPE KEY
+    ====================================================*/
+
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key === "Escape") {
+
+            closeMenu();
+
+        }
+
+    });
+
+
+    /*====================================================
+        CLOSE MENU WHEN WINDOW BECOMES DESKTOP SIZE
+    ====================================================*/
+
+    window.addEventListener("resize", function () {
+
+        if (window.innerWidth > 768) {
+
+            closeMenu();
+
+        }
+
+    });
+
+
+    /*====================================================
+        STICKY HEADER
+    ====================================================*/
+
+    if (header) {
+
+        window.addEventListener("scroll", function () {
+
+            if (window.scrollY > 80) {
+
+                header.classList.add("sticky");
+
+            } else {
+
+                header.classList.remove("sticky");
+
+            }
+
+        });
+
+    }
+
+
+    /*====================================================
+        SCROLL REVEAL
+    ====================================================*/
+
+    const reveals = document.querySelectorAll(
+        ".service-card, .stat-card, .feature, .step, .product, .testimonial-card, .faq-item, .section-title, .cta-content"
+    );
+
+
+    function revealScroll() {
+
+        reveals.forEach(function (item) {
+
+            const top = item.getBoundingClientRect().top;
+
+            if (top < window.innerHeight - 120) {
+
+                item.classList.add("reveal");
+                item.classList.add("active");
+
+            }
+
+        });
+
+    }
+
+
+    window.addEventListener("scroll", revealScroll);
+
+    revealScroll();
+
+
+    /*====================================================
+        FAQ ACCORDION
+    ====================================================*/
+
+    const faqItems = document.querySelectorAll(".faq-item");
+
+
+    faqItems.forEach(function (item) {
+
+        const button = item.querySelector(".faq-question");
+        const answer = item.querySelector(".faq-answer");
+        const icon = button ? button.querySelector("i") : null;
+
+        if (!button || !answer) return;
+
+        button.setAttribute("type", "button");
+        button.setAttribute("aria-expanded", "false");
+
+
+        button.addEventListener("click", function () {
+
+            const wasOpen = item.classList.contains("active");
+
+
+            faqItems.forEach(function (other) {
+
+                other.classList.remove("active");
+
+                const otherButton =
+                    other.querySelector(".faq-question");
+
+                const otherAnswer =
+                    other.querySelector(".faq-answer");
+
+                const otherIcon =
+                    other.querySelector(".faq-question i");
+
+
+                if (otherAnswer) {
+
+                    otherAnswer.style.maxHeight = null;
+
+                }
+
+
+                if (otherButton) {
+
+                    otherButton.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+
+                }
+
+
+                if (otherIcon) {
+
+                    otherIcon.classList.remove("fa-minus");
+                    otherIcon.classList.add("fa-plus");
+
+                }
+
+            });
+
+
+            if (!wasOpen) {
+
+                item.classList.add("active");
+
+                answer.style.maxHeight =
+                    answer.scrollHeight + "px";
+
+                button.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+
+
+                if (icon) {
+
+                    icon.classList.remove("fa-plus");
+                    icon.classList.add("fa-minus");
+
+                }
+
+            }
+
+        });
+
+    });
+
+
+    /*====================================================
+        BACK TO TOP
+    ====================================================*/
+
+    const topBtn = document.getElementById("topBtn");
+
+
+    if (topBtn) {
+
+        window.addEventListener("scroll", function () {
+
+            if (window.scrollY > 500) {
+
+                topBtn.classList.add("show");
+
+            } else {
+
+                topBtn.classList.remove("show");
+
+            }
+
+        });
+
+
+        topBtn.addEventListener("click", function () {
+
+            window.scrollTo({
+
+                top: 0,
+                behavior: "smooth"
+
+            });
+
+        });
+
+    }
+
+
+    /*====================================================
+        BUTTON RIPPLE EFFECT
+    ====================================================*/
+
+    document.querySelectorAll(".btn").forEach(function (button) {
+
+        button.addEventListener("click", function (event) {
+
+            const ripple = document.createElement("span");
+
+            const diameter = Math.max(
+                this.clientWidth,
+                this.clientHeight
+            );
+
+            const radius = diameter / 2;
+
+            ripple.style.width = diameter + "px";
+            ripple.style.height = diameter + "px";
+
+            ripple.style.left =
+                event.offsetX - radius + "px";
+
+            ripple.style.top =
+                event.offsetY - radius + "px";
+
+            ripple.classList.add("ripple");
+
+
+            const oldRipple =
+                this.querySelector(".ripple");
+
+            if (oldRipple) {
+
+                oldRipple.remove();
+
+            }
+
+
+            this.appendChild(ripple);
+
+        });
+
+    });
+
+
+    /*====================================================
+        HERO PARALLAX
+    ====================================================*/
+
+    const hero = document.querySelector(".hero-image img");
+
+
+    if (hero && window.innerWidth > 768) {
+
+        window.addEventListener("mousemove", function (event) {
+
+            const x =
+                (window.innerWidth / 2 - event.clientX) / 80;
+
+            const y =
+                (window.innerHeight / 2 - event.clientY) / 80;
+
+            hero.style.transform =
+                "translate(" + x + "px, " + y + "px)";
+
+        });
+
+    }
+
+
+    /*====================================================
+        SMOOTH SCROLL
+    ====================================================*/
+
+    document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+
+        anchor.addEventListener("click", function (event) {
+
+            const href = this.getAttribute("href");
+
+            if (!href || href === "#") return;
+
+            const target =
+                document.querySelector(href);
+
+            if (target) {
+
+                event.preventDefault();
+
+                target.scrollIntoView({
+
+                    behavior: "smooth"
+
+                });
+
+            }
+
+        });
+
+    });
+
+
+    /*====================================================
+        ACTIVE NAVIGATION
+    ====================================================*/
+
+    const sections =
+        document.querySelectorAll("section");
+
+    const navLinks =
+        document.querySelectorAll("#navbar a");
+
+
+    window.addEventListener("scroll", function () {
+
+        let current = "";
+
+
+        sections.forEach(function (section) {
+
+            const top =
+                section.offsetTop - 120;
+
+            const height =
+                section.offsetHeight;
+
+
+            if (
+                window.scrollY >= top &&
+                window.scrollY < top + height
+            ) {
+
+                const id =
+                    section.getAttribute("id");
+
+                if (id) {
+
+                    current = id;
+
+                }
+
+            }
+
+        });
+
+
+        navLinks.forEach(function (link) {
+
+            link.classList.remove("active");
+
+
+            const href =
+                link.getAttribute("href");
+
+
+            if (
+                href &&
+                href === "#" + current
+            ) {
+
+                link.classList.add("active");
+
+            }
+
+        });
+
+    });
+
+
+    /*====================================================
+        IMAGE FADE-IN
+    ====================================================*/
+
+    document.querySelectorAll("img").forEach(function (image) {
+
+        if (image.complete) {
+
+            image.classList.add("loaded");
+
+        } else {
+
+            image.addEventListener("load", function () {
+
+                image.classList.add("loaded");
+
+            });
+
+        }
+
+    });
+
+
+    /*====================================================
+        CONSOLE BRANDING
+    ====================================================*/
+
+    console.log(
+        "%cUP GAS",
+        "color:#ff7a00;font-size:22px;font-weight:bold;"
+    );
+
+    console.log(
+        "%cGas Delivered. Life Made Easy.",
+        "color:white;font-size:14px;"
+    );
+
+});            navbar.classList.remove("active");
         }
 
         if (overlay) {
