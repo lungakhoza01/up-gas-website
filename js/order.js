@@ -167,7 +167,7 @@ function updateOrderFlow() {
         orderType.required = true;
     } else {
         orderType.value = "";
-        orderType.required = false;
+        orderType.required = true;
     }
 
     const selectedType = orderType.value;
