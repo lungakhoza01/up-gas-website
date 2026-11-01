@@ -188,8 +188,7 @@ function updateOrderFlow() {
             orderNotice.innerHTML = `<i class="fas fa-truck-fast"></i><div><strong>Cylinder purchase</strong><span>The refill price for your selected cylinder is shown in the product selection. Delivery details are required below.</span></div>`;
         } else if (has === "no" && selectedType === "bottle-refill") {
             orderNotice.hidden = false;
-            orderNotice.className = "order-notice info";
-            orderNotice.innerHTML = `<i class="fas fa-circle-info"></i><div><strong>Cylinder + refill</strong><span>The refill price for your selected cylinder is shown in the product selection. For 3kg, 5kg and 7kg, the refill portion is completed in-store.</span></div>`;
+            orderNotice.className = "order-notice info";orderNotice.innerHTML = `<i class="fas fa-circle-info"></i><div><strong>Cylinder + refill</strong><span>The refill price for your selected cylinder is shown in the product selection. For 3kg, 5kg and 7kg, the refill portion is completed in-store.</span></div>`;
         } else {
             orderNotice.hidden = true;
             orderNotice.innerHTML = "";
