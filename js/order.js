@@ -173,29 +173,59 @@ function updateOrderFlow() {
     const selectedType = orderType.value;
     const inStore = IN_STORE_SIZES.includes(size) && (selectedType === "refill" || selectedType === "bottle-refill");
 
-    if (orderNotice) {
-        if (inStore) {
-            orderNotice.hidden = false;
-            orderNotice.className = "order-notice in-store";
-            orderNotice.innerHTML = `<i class="fas fa-store"></i><div><strong>In-store refill only</strong><span>${size} refills are done in-store and are not delivered. Please choose your nearest UP Gas store below.</span></div>`;
-        } else if (DELIVERY_REFILL_SIZES.includes(size) && selectedType === "refill") {
-            orderNotice.hidden = false;
-            orderNotice.className = "order-notice delivery";
-            orderNotice.innerHTML = `<i class="fas fa-truck-fast"></i><div><strong>Refill delivery available</strong><span>${size} refills can be delivered to your address.</span></div>`;
-        } else if (has === "no" && selectedType === "bottle-only") {
-            orderNotice.hidden = false;
-            orderNotice.className = "order-notice delivery";
-            orderNotice.innerHTML = `<i class="fas fa-truck-fast"></i><div><strong>Cylinder purchase</strong><span>The refill price for your selected cylinder is shown in the product selection. Delivery details are required below.</span></div>`;
-        } else if (has === "no" && selectedType === "bottle-refill") {
-            orderNotice.hidden = false;
-            orderNotice.className = "order-notice info";
-            orderNotice.innerHTML = `<i class="fas fa-truck-fast"></i><div><strong>Cylinder purchase</strong><span>The refill price for your selected cylinder is shown in the product selection. Delivery details are required below.</span></div>`;
-        } else if (has === "no" && selectedType === "bottle-refill")
-            } else {
-            orderNotice.hidden = true;
-            orderNotice.innerHTML = "";
-        }
+    ```javascript
+if (orderNotice) {
+    if (inStore) {
+        orderNotice.hidden = false;
+        orderNotice.className = "order-notice in-store";
+        orderNotice.innerHTML = `
+            <i class="fas fa-store"></i>
+            <div>
+                <strong>In-store refill only</strong>
+                <span>${size} refills are done in-store and are not delivered. Please choose your nearest UP Gas store below.</span>
+            </div>`;
+    } else if (
+        DELIVERY_REFILL_SIZES.includes(size) &&
+        selectedType === "refill"
+    ) {
+        orderNotice.hidden = false;
+        orderNotice.className = "order-notice delivery";
+        orderNotice.innerHTML = `
+            <i class="fas fa-truck-fast"></i>
+            <div>
+                <strong>Refill delivery available</strong>
+                <span>${size} refills can be delivered to your address.</span>
+            </div>`;
+    } else if (
+        has === "no" &&
+        selectedType === "bottle-only"
+    ) {
+        orderNotice.hidden = false;
+        orderNotice.className = "order-notice delivery";
+        orderNotice.innerHTML = `
+            <i class="fas fa-truck-fast"></i>
+            <div>
+                <strong>Cylinder purchase</strong>
+                <span>The price for your selected cylinder is shown in the product selection. Delivery details are required below.</span>
+            </div>`;
+    } else if (
+        has === "no" &&
+        selectedType === "bottle-refill"
+    ) {
+        orderNotice.hidden = false;
+        orderNotice.className = "order-notice info";
+        orderNotice.innerHTML = `
+            <i class="fas fa-truck-fast"></i>
+            <div>
+                <strong>Cylinder + refill</strong>
+                <span>The refill price for your selected cylinder is shown in the product selection. For 3kg, 5kg and 7kg, the refill portion is completed in-store.</span>
+            </div>`;
+    } else {
+        orderNotice.hidden = true;
+        orderNotice.innerHTML = "";
     }
+}
+```
 
     if (fulfilmentTitle) {
         fulfilmentTitle.textContent = inStore ? "Store Collection" : "Delivery Information";
